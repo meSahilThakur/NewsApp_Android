@@ -1,14 +1,11 @@
 package com.example.newsapp.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.newsapp.data.local.entity.ArticleEntity
-import com.example.newsapp.domain.model.Article
 import kotlinx.coroutines.flow.Flow
-import retrofit2.http.Url
 
 @Dao // Annotate as a Room DAO
 interface ArticleDao {

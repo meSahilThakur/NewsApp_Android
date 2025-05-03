@@ -2,12 +2,15 @@ package com.example.newsapp.data.repository
 
 import android.util.Log
 import com.example.newsapp.data.local.dao.ArticleDao
+import com.example.newsapp.data.mapper.ArticleMapper
 import com.example.newsapp.data.mapper.ArticleMapper.toArticle
 import com.example.newsapp.data.mapper.ArticleMapper.toArticleEntity
 import com.example.newsapp.data.remote.api.NewsApi
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.repository.NewsRepository
+import com.example.newsapp.util.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,8 +20,16 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
     private val newsApi: NewsApi,
     private val articleDao: ArticleDao
 ): NewsRepository {
-    override fun getNews(): Flow<List<Article>> {
-        throw UnsupportedOperationException("getNews() not implemented directly in RepositoryImpl for this example flow. UseCases will call API/DB.")
+    override fun getNews(): Flow<Resource<List<Article>>> = flow{
+        emit(Resource.Loading)
+        try {
+            val response = newsApi.getTopHeadlines()
+            val articles = response.articles.map { it.toArticle() }
+            emit(Resource.Success(articles))
+        }catch (e : Exception){
+            Log.e("NewsRepositoryImpl", "General Exception fetching news: ${e.localizedMessage}", e)
+            emit(Resource.Error(e.localizedMessage ?: "Something went wrong"))
+        }
     }
 
     override suspend fun saveArticle(article: Article) {
