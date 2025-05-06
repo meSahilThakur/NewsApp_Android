@@ -8,11 +8,11 @@ import retrofit2.http.Query
 interface NewsApi {
 
     @GET("v2/top-headlines")
-    fun getTopHeadlines(
+    suspend fun getTopHeadlines(
         @Query("country")
         country: String = "us",         // Example: get US headlines
         @Query("apiKey")
-        apiKey: String = BuildConfig.NEWS_API_KEY       // actual API key
+        apiKey: String = "2ec3c5d80e13469ebe4b9d1d0bc43aee"   //BuildConfig.NEWS_API_KEY       // actual API key
     ): NewsResponse
 
     // we should add more functions for searching, etc.

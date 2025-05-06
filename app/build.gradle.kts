@@ -70,9 +70,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:2.8.9")
+
     // HILT
     implementation("com.google.dagger:hilt-android:2.56.1")
     ksp("com.google.dagger:hilt-android-compiler:2.56.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
@@ -82,8 +86,17 @@ dependencies {
     // Room
     implementation ("androidx.room:room-runtime:2.7.1")
     ksp("androidx.room:room-compiler:2.7.1")
-//    kapt ("androidx.room:room-compiler:2.7.1")
     implementation ("androidx.room:room-ktx:2.7.1")
+//    kapt ("androidx.room:room-compiler:2.7.1")
+
+    // Coil
+    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.1.0")
+
+    // Coroutines & Flow
+//    val coroutines_version = "1.10.1" // Use the latest stable version
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
 
     // Koin
 //    implementation ("io.insert-koin:koin-android:3.5.3")
