@@ -37,7 +37,7 @@ import com.example.newsapp.domain.model.Article
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsListScreen(
+fun NewsListScreenUI(
     navController: NavController,
     viewModel: NewsListViewModel = hiltViewModel()
 ) {

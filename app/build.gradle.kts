@@ -9,6 +9,8 @@ plugins {
     id("com.google.devtools.ksp") // Apply KSP plugin
     id("kotlin-parcelize")    //Parcelable is used to passing data between components (like between screens using Navigation arguments)
 
+    kotlin("plugin.serialization") version "2.1.20"
+
 //    id ("kotlin-kapt") // <-- This one is for Room compiler
 }
 
@@ -92,6 +94,9 @@ dependencies {
     // Coil
     implementation("io.coil-kt.coil3:coil-compose:3.1.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.1.0")
+
+    //serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     // Coroutines & Flow
 //    val coroutines_version = "1.10.1" // Use the latest stable version
