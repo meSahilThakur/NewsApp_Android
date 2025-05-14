@@ -1,6 +1,7 @@
 package com.example.newsapp.data.repository
 
 import android.util.Log
+import android.util.Log.e
 import com.example.newsapp.data.local.dao.ArticleDao
 import com.example.newsapp.data.mapper.ArticleMapper
 import com.example.newsapp.data.mapper.ArticleMapper.toArticle
@@ -10,8 +11,12 @@ import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.repository.NewsRepository
 import com.example.newsapp.util.Resource
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,6 +60,34 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
         // Get flow of entities from DB and map to domain models
         return articleDao.getAllArticles().map { entities ->
             entities.map { it.toArticle() } // Convert each entity to domain model
+        }
+    }
+
+    override fun getArticleByUrl(articleUrl: String): Flow<Resource<Article>> = flow{
+        emit(Resource.Loading)
+        try {
+            val response = newsApi.getTopHeadlines()
+            val articleDto = response.articles.find { it.url == articleUrl }                    // Finds the specific article DTO by URL
+            if (articleDto != null){
+                val article = articleDto.toArticle()
+                emit(Resource.Success(article))
+            }else{
+                emit(Resource.Error("Article details not found online."))
+            }
+        } catch (e: HttpException) {                                                        //jab network request server tak pahunch jaaye, par server kuch error code return kare (jaise 404 Not Found, 500 Internal Server Error)
+            val errorMessage = e.localizedMessage ?: "An unexpected HTTP error occurred fetching article details"
+            Log.e("NewsRepositoryImpl", "HTTP Exception fetching article: $errorMessage", e)
+            emit(Resource.Error(errorMessage))
+
+        } catch (e: IOException) {                                                          //jab network connection mein hi koi problem ho. Jaise phone mein internet na ho, server down ho, ya request timeout ho jaaye. Yahan request server tak theek se pahunch hi nahi paayi.
+            val errorMessage = e.localizedMessage ?: "Couldn't reach server to get article details. Check your internet connection."
+            Log.e("NewsRepositoryImpl", "IO Exception fetching article: $errorMessage", e)
+            emit(Resource.Error(errorMessage))
+
+        } catch (e: Exception) {                                                            //kisi bhi doosre tarah ke exception ko handle karega, jo na toh HttpException hai aur na IOException. Jaise aapke try block ke andar koi null pointer exception aa jaaye, ya JSON parsing mein koi unexpected error ho jaaye (agar converter mein problem ho), ya koi aur logic error.
+            val errorMessage = e.localizedMessage ?: "An unknown error occurred fetching article details"
+            Log.e("NewsRepositoryImpl", "General Exception fetching article: $errorMessage", e)
+            emit(Resource.Error(errorMessage))
         }
     }
 
