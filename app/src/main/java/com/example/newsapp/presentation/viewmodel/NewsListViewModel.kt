@@ -6,6 +6,8 @@ import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.usecase.DeleteArticleUseCase
 import com.example.newsapp.domain.usecase.GetNewsUseCase
 import com.example.newsapp.domain.usecase.SaveArticleUseCase
+import com.example.newsapp.presentation.common.DeleteArticleState
+import com.example.newsapp.presentation.common.SaveArticleState
 import com.example.newsapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -80,15 +82,5 @@ class NewsListViewModel @Inject constructor(
 data class GetNewsState(
     val isLoading: Boolean = false,
     val getNewsData: List<Article> = emptyList(),
-    val error: String? = null
-)
-data class SaveArticleState(
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val error: String? = null
-)
-data class DeleteArticleState(
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
     val error: String? = null
 )

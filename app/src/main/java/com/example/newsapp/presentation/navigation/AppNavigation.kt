@@ -1,7 +1,11 @@
 package com.example.newsapp.presentation.navigation
 
 import android.util.Log
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -25,13 +29,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.newsapp.presentation.ui.news_detail.NewsDetailScreenUI
 import com.example.newsapp.presentation.ui.news_list.NewsListScreenUI
 import com.example.newsapp.presentation.ui.saved_articles.SavedArticlesScreenUI
 import com.example.newsapp.presentation.ui.search_screen.SearchScreenUI
 
 
 @Composable
-fun AppNavigation(modifier: Modifier) {
+fun AppNavigation() {
 
     val bottomNavItems = listOf(
         BottomNavigationItem(
@@ -65,6 +70,9 @@ fun AppNavigation(modifier: Modifier) {
 
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.systemBars),
         bottomBar = {
             NavigationBar {
                 bottomNavItems.forEach { bottomNavItem ->
@@ -131,8 +139,10 @@ fun AppNavigation(modifier: Modifier) {
             composable<Routes.NewsDetailScreen> { backStackEntry ->
                 val args = backStackEntry.toRoute<Routes.NewsDetailScreen>()
                 val articleUrl = args.articleUrl
-                // NewsDetailScreen(navController = navController, articleUrl = articleUrl)
-                Text("News Detail Screen for URL: $articleUrl (Coming Soon)")
+                NewsDetailScreenUI(
+                    navController = navController,
+//                    articleUrl = articleUrl
+                )
             }
 
              composable<Routes.SearchScreen> {

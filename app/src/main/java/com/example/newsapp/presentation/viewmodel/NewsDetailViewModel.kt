@@ -9,6 +9,8 @@ import com.example.newsapp.domain.usecase.DeleteArticleUseCase
 import com.example.newsapp.domain.usecase.GetArticleDetailUseCase
 import com.example.newsapp.domain.usecase.IsArticleSavedUseCase
 import com.example.newsapp.domain.usecase.SaveArticleUseCase
+import com.example.newsapp.presentation.common.DeleteArticleState
+import com.example.newsapp.presentation.common.SaveArticleState
 import com.example.newsapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -92,19 +94,19 @@ class NewsDetailViewModel @Inject constructor(
                 if (currentlySaved){
                     deleteArticleUseCase(article)
                     _isSavedState.value = IsSavedState(data = false)
-                    _deleteArticleState.value = DeleteArticleState(data = true)
+                    _deleteArticleState.value = DeleteArticleState(isSuccess = true)
                 }else{
                     saveArticleUseCase(article)
-                    _deleteArticleState.value = DeleteArticleState(data = false)
+                    _deleteArticleState.value = DeleteArticleState(isSuccess = false)
                     _isSavedState.value = IsSavedState(data = true)
                 }
                 resetSaveArticleState()
                 resetDeleteArticleState()
             }catch (e: Exception){
                 if (_isSavedState.value.data == true) { // Agar delete fail hua
-                    _deleteArticleState.value = DeleteArticleState(error = e.localizedMessage, data = true)
+                    _deleteArticleState.value = DeleteArticleState(error = e.localizedMessage, isSuccess = true)
                 } else { // Agar save fail hua
-                    _saveArticleState.value = SaveArticleState(error = e.localizedMessage, data = true)
+                    _saveArticleState.value = SaveArticleState(error = e.localizedMessage, isSuccess = true)
                 }
             }finally {
                 // Reset loading states in action states after operation completes (success or error)
@@ -129,17 +131,6 @@ data class NewsDetailState(
 )
 
 data class IsSavedState(
-    val isLoading: Boolean = false,
-    val data: Boolean = false,
-    val error: String = ""
-)
-
-data class SaveArticleState(
-    val isLoading: Boolean = false,
-    val data: Boolean = false,
-    val error: String = ""
-)
-data class DeleteArticleState(
     val isLoading: Boolean = false,
     val data: Boolean = false,
     val error: String = ""
