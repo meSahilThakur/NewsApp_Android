@@ -15,5 +15,6 @@ data class ArticleEntity(
     @PrimaryKey
     val url: String,
     val urlToImage: String?,
-    val timestamp: Long = System.currentTimeMillis() // Optional: add timestamp for caching
+    val timestamp: Long = System.currentTimeMillis(), // Optional: add timestamp for caching
+    val isSaved: Boolean = false
 )

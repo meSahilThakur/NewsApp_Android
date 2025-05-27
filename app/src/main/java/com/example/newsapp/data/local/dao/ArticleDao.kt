@@ -21,4 +21,7 @@ interface ArticleDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM articles WHERE url = :articleUrl LIMIT 1)")
     suspend fun isArticleSaved(articleUrl: String): Boolean
+
+    @Query("SELECT * FROM articles WHERE isSaved = 1")
+    fun getSavedArticles(): Flow<List<ArticleEntity>>
 }

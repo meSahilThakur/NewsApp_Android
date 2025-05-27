@@ -95,23 +95,26 @@ class NewsDetailViewModel @Inject constructor(
                     deleteArticleUseCase(article)
                     _isSavedState.value = IsSavedState(data = false)
                     _deleteArticleState.value = DeleteArticleState(isSuccess = true)
+                    _deleteArticleState.value = _deleteArticleState.value.copy(isLoading = false) // Reset loading for delete
+                    resetSaveArticleState()
                 }else{
                     saveArticleUseCase(article)
-                    _deleteArticleState.value = DeleteArticleState(isSuccess = false)
                     _isSavedState.value = IsSavedState(data = true)
+                    _saveArticleState.value = SaveArticleState(isSuccess = true) // Set success for save
+                    _saveArticleState.value = _saveArticleState.value.copy(isLoading = false) // Reset loading for save
+                    resetDeleteArticleState() // Reset delete state as it wasn't used for save
                 }
-                resetSaveArticleState()
-                resetDeleteArticleState()
             }catch (e: Exception){
-                if (_isSavedState.value.data == true) { // Agar delete fail hua
-                    _deleteArticleState.value = DeleteArticleState(error = e.localizedMessage, isSuccess = true)
-                } else { // Agar save fail hua
-                    _saveArticleState.value = SaveArticleState(error = e.localizedMessage, isSuccess = true)
+                Log.e("NewsDetailViewModel", "Error toggling save status", e)
+                if (_isSavedState.value.data == true) { // If delete failed
+                    _deleteArticleState.value = DeleteArticleState(isError = true, error = e.localizedMessage)
+                    _deleteArticleState.value = _deleteArticleState.value.copy(isLoading = false)
+                    resetSaveArticleState()
+                } else { // If save failed
+                    _saveArticleState.value = SaveArticleState(isError = true, error = e.localizedMessage)
+                    _saveArticleState.value = _saveArticleState.value.copy(isLoading = false)
+                    resetDeleteArticleState()
                 }
-            }finally {
-                // Reset loading states in action states after operation completes (success or error)
-                _saveArticleState.value = _saveArticleState.value.copy(isLoading = false)
-                _deleteArticleState.value = _deleteArticleState.value.copy(isLoading = false)
             }
         }
     }

@@ -36,7 +36,7 @@ class NewsListViewModel @Inject constructor(
         getNews()
     }
 
-    fun getNews(){
+    fun getNews(query: String? = null){
         viewModelScope.launch {
             getNewsUseCase().collectLatest {
                 when(it){

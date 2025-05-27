@@ -39,7 +39,8 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
 
     override suspend fun saveArticle(article: Article) {
         // Convert domain model to Room entity
-        val entity = article.toArticleEntity()
+        val entity = article.toArticleEntity().copy(isSaved = true)
+        Log.d("SaveArticleRepo", "Saving entity: $entity")
         articleDao.insertArticle(entity)
     }
 
@@ -57,11 +58,12 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
 
 
     override fun getSavedArticles(): Flow<List<Article>> {
-        // Get flow of entities from DB and map to domain models
-        return articleDao.getAllArticles().map { entities ->
+        // Get flow of saved entities from DB and map to domain models
+        return articleDao.getSavedArticles().map { entities -> // Use the new getSavedArticles() DAO function
             entities.map { it.toArticle() } // Convert each entity to domain model
         }
     }
+
 
     override fun getArticleByUrl(articleUrl: String): Flow<Resource<Article>> = flow{
         emit(Resource.Loading)
@@ -94,4 +96,5 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
     override suspend fun isArticleSaved(articleUrl: String): Boolean {
         return articleDao.isArticleSaved(articleUrl)
     }
+
 }

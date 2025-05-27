@@ -25,8 +25,8 @@ object DatabaseModule {
             ArticleDatabase::class.java,
             "articles_db"
         )
-                                                        // Wiping database on upgrade is NOT for production
-//             .fallbackToDestructiveMigration()
+            // Wiping database on upgrade is NOT for production
+            .fallbackToDestructiveMigration()
             .build()
     }
 

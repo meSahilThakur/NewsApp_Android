@@ -74,6 +74,7 @@ fun NewsDetailScreenUI(
     // --- Handle Snackbar Feedback for Save/Delete Actions ---
     // Use LaunchedEffect to show Snackbar when save/delete action state changes
     LaunchedEffect(saveActionState) {
+        Log.d("NewsDetailUI", "Save Action State changed: $saveActionState")
         if (saveActionState.isSuccess) {
             snackbarHostState.showSnackbar(
                 message = "Article saved successfully!",

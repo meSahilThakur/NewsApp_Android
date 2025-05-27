@@ -7,7 +7,7 @@ import com.example.newsapp.data.local.entity.ArticleEntity
 
 @Database(
     entities = [ArticleEntity::class], // List our entities here
-    version = 1, // Define the database version
+    version = 2, // Define the database version
     exportSchema = false // Set to true to export schema for version control/inspection
 )
 abstract class ArticleDatabase : RoomDatabase() {
