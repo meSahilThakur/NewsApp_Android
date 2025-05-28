@@ -25,10 +25,14 @@ class NewsRepositoryImpl @Inject constructor(   // Hilt will inject these depend
     private val newsApi: NewsApi,
     private val articleDao: ArticleDao
 ): NewsRepository {
-    override fun getNews(): Flow<Resource<List<Article>>> = flow{
+    override fun getNews(query: String?): Flow<Resource<List<Article>>> = flow{
         emit(Resource.Loading)
         try {
-            val response = newsApi.getTopHeadlines()
+            val response = if (query.isNullOrBlank()) {
+                newsApi.getTopHeadlines()
+            }else{
+                newsApi.searchNews(query = query)
+            }
             val articles = response.articles.map { it.toArticle() }
             emit(Resource.Success(articles))
         }catch (e : Exception){

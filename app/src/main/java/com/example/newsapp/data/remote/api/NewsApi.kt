@@ -16,9 +16,9 @@ interface NewsApi {
     ): NewsResponse
 
     // we should add more functions for searching, etc.
-    // @GET("v2/everything")
-    // suspend fun searchNews(
-    //     @Query("q") query: String,
-    //     @Query("apiKey") apiKey: String = "YOUR_API_KEY"
-    // ): NewsResponse
+     @GET("v2/everything")
+     suspend fun searchNews(
+         @Query("q") query: String,
+         @Query("apiKey") apiKey: String = "2ec3c5d80e13469ebe4b9d1d0bc43aee"
+     ): NewsResponse
 }

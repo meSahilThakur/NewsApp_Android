@@ -1,5 +1,7 @@
 package com.example.newsapp.presentation.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.domain.model.Article
@@ -10,6 +12,7 @@ import com.example.newsapp.presentation.common.DeleteArticleState
 import com.example.newsapp.presentation.common.SaveArticleState
 import com.example.newsapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -32,8 +35,22 @@ class NewsListViewModel @Inject constructor(
     private val _deleteArticleState = MutableStateFlow(DeleteArticleState())
     val deleteArticleState = _deleteArticleState.asStateFlow()
 
+    // Job is coroutine which will suspend itself
+    private val getNewsJob: Job? = null                   //When the user types in the search bar, we'll want to fetch new data based on their query. If they type quickly, we don't want to start a new network request for every single keystroke. Instead, we want to:
+                                                                    // 1. Cancel any ongoing news fetching coroutine (the previous getNews call).
+                                                                    // 2. Start a new coroutine to fetch news based on the latest search query.
+
+    private val _searchQuery = mutableStateOf("")
+    val searchQuery: State<String> = _searchQuery
+
     init {
         getNews()
+    }
+
+    fun onSearchQueryChange(query: String){
+        _searchQuery.value = query
+        // We'll trigger the news fetching based on the query
+        getNews(query)
     }
 
     fun getNews(query: String? = null){

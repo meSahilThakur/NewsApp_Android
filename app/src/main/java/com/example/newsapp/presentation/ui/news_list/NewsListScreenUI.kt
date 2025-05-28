@@ -49,7 +49,7 @@ fun NewsListScreenUI(
 ) {
     val state by viewModel.newsState.collectAsState()
 
-    val searchText = remember{ mutableStateOf("") }
+    val searchQuery by viewModel.searchQuery
 
     Column(
         modifier = Modifier
@@ -57,9 +57,23 @@ fun NewsListScreenUI(
             .padding(8.dp),
     ) {
 
-        SearchBar(
-            text = searchText.value,
-            onSearch = { searchText.value = it}
+//        SearchBar(
+//            text = searchQuery,
+//            onSearch = { viewModel::onSearchQueryChange }
+//        )
+
+        // Search Bar
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = viewModel::onSearchQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            shape = RoundedCornerShape(24.dp),
+            leadingIcon = {
+                Icon(Icons.Filled.Search, contentDescription = "Search")
+            },
+            placeholder = { Text("Search articles...") }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -97,24 +111,22 @@ fun NewsListScreenUI(
 
 }
 
-@Composable
-fun SearchBar( text: String, onSearch: (String)-> Unit){
-    Box(modifier = Modifier.fillMaxWidth()){
-        OutlinedTextField(
-            value = text,
-            onValueChange = onSearch,
-            label = {Text("Search")},
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(24.dp)
-        )
-        IconButton(
-            onClick = {},
-            modifier = Modifier.padding(8.dp).align(Alignment.CenterEnd)
-        ) {
-            Icon(imageVector = Icons.Default.Search, contentDescription = null)
-        }
-    }
-}
+//@Composable
+//fun SearchBar( text: String, onSearch: (String)-> Unit){
+//    Box(modifier = Modifier.fillMaxWidth()){
+//        OutlinedTextField(
+//            value = text,
+//            onValueChange = onSearch,
+//            label = {Text("Search")},
+//            modifier = Modifier.fillMaxWidth(),
+//            shape = RoundedCornerShape(24.dp),
+//            leadingIcon = {
+//                Icon(Icons.Filled.Search, contentDescription = "Search")
+//            },
+//            placeholder = { Text("Search articles...") }
+//        )
+//    }
+//}
 
 @Composable
 fun ArticleListItem(
